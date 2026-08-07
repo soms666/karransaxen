@@ -29,12 +29,13 @@ const paymentMethods = [
 ];
 
 const openingHours = {
-  1: [9, 18],
-  2: [9, 18],
-  3: [9, 18],
-  4: [9, 18],
-  5: [9, 18],
-  6: [10, 15],
+  0: [0, 24],
+  1: [0, 24],
+  2: [0, 24],
+  3: [0, 24],
+  4: [0, 24],
+  5: [0, 24],
+  6: [0, 24],
 };
 
 const storageKey = "karran-saxen-bookings-v1";
@@ -138,7 +139,7 @@ function generateSlots(date, duration) {
   const opening = hours[0] * 60;
   const closing = hours[1] * 60;
   const slots = [];
-  const step = 15;
+  const step = 30;
 
   for (let start = opening; start + duration <= closing; start += step) {
     const label = formatTimeLabel(start);
