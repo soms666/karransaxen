@@ -240,33 +240,6 @@ function renderSlots() {
   syncSummary();
 }
 
-function renderBookings() {
-  const upcoming = [...state.bookings]
-    .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
-    .slice(0, 5);
-
-  bookingList.innerHTML =
-    upcoming.length === 0
-      ? `<div class="booking-list-item"><strong>Inga bokningar ännu</strong><small>Den första tider dyker upp här när du sparar en bokning.</small></div>`
-      : upcoming
-          .map((booking) => {
-            const service = getService(booking.serviceId);
-            const stylist = getStylist(booking.stylistId);
-            return `
-              <article class="booking-list-item">
-                <header>
-                  <span>${formatDate(booking.date)} · ${booking.time}</span>
-                  <span>${service.price} kr</span>
-                </header>
-                <small>${service.name} med ${stylist.name}</small>
-                <small>${booking.name} · ${booking.phone}</small>
-                <small>Betalning: ${getPaymentMethod(booking.paymentMethod).name}</small>
-              </article>
-            `;
-          })
-          .join("");
-}
-
 function syncSummary() {
   const service = getService(state.serviceId);
   const stylist = getStylist(state.stylistId);
@@ -426,6 +399,21 @@ function initDateInput() {
   dateInput.value = state.date;
 }
 
+function ensureAvailableDate() {
+  const service = getService(state.serviceId);
+
+  for (let offset = 0; offset <= 14; offset += 1) {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+    const iso = date.toISOString().slice(0, 10);
+    if (generateSlots(iso, service.duration).some((slot) => slot.available)) {
+      state.date = iso;
+      dateInput.value = iso;
+      return;
+    }
+  }
+}
+
 function handleSlotClick(event) {
   const button = event.target.closest(".slot");
   if (!button || button.disabled) return;
@@ -543,6 +531,7 @@ function init() {
   renderStylists();
   renderPaymentMethods();
   initDateInput();
+  ensureAvailableDate();
   attachEvents();
   state.time = "";
   renderSlots();
