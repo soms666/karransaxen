@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Välkommen till Kärrans salong. Boka Herrklipp, Skägg + trim eller intimklippning hos Kärran & Saxen."
+    />
+    <title>Kärran & Saxen | Bokning av klipptider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero__copy">
+          <div class="eyebrow">Kärran & Saxen</div>
+          <h1>Välkommen till Kärrans salong, där saxen får göra jobbet och du får känna dig som hemma.</h1>
+          <p>
+            Boka in en tid som passar dig för Herrklipp, Skägg + trim eller intimklippning.
+            Välj din behandling, hitta en ledig tid och låt Kärran ta hand om resten.
+          </p>
+          <div class="hero__actions">
+            <a href="#booking" class="button button--primary">Boka tid</a>
+            <a href="#booking" class="button button--secondary">Se behandlingar</a>
+          </div>
+          <dl class="hero__stats">
+            <div>
+              <dt>Snabb bokning</dt>
+              <dd>Under 1 minut</dd>
+            </div>
+            <div>
+              <dt>Mobil först</dt>
+              <dd>Fullt responsiv</dd>
+            </div>
+            <div>
+              <dt>Öppet dygnet runt</dt>
+              <dd>Boka när det passar</dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside class="hero__panel" aria-label="Snabb översikt">
+          <div class="glass-card">
+            <span class="pill">Dagens läge</span>
+            <div class="panel-title">Nästa lediga tid</div>
+            <div class="panel-slot" id="next-available-slot">09:30 i morgon</div>
+            <p class="panel-copy">Boka när du vill, dygnet runt. Systemet visar lediga tider utifrån din behandling.</p>
+          </div>
+          <div class="mini-grid">
+            <article class="mini-card">
+              <strong>Herrklipp</strong>
+              <span>30 min</span>
+            </article>
+            <article class="mini-card">
+              <strong>Skägg + trim</strong>
+              <span>20 min</span>
+            </article>
+            <article class="mini-card">
+              <strong>Intimklippning</strong>
+              <span>30 min</span>
+            </article>
+            <article class="mini-card mini-card--accent">
+              <strong>Fri avbokning</strong>
+              <span>Upp till 12 h</span>
+            </article>
+          </div>
+        </aside>
+      </header>
+
+      <main class="layout">
+        <section class="content-stack">
+          <section class="schedule-card" id="booking">
+            <div class="section-heading">
+              <span class="eyebrow">Boka klipptid</span>
+              <h2>Välj din tid och skapa bokningen direkt.</h2>
+            </div>
+
+            <div class="booking-grid">
+              <div class="booking-col">
+                <label class="field">
+                  <span>Tjänst</span>
+                  <select id="service"></select>
+                </label>
+
+                <div class="field">
+                  <span>Välj stylist</span>
+                  <div class="choice-row" id="stylist-list" role="radiogroup" aria-label="Välj stylist"></div>
+                </div>
+
+                <label class="field">
+                  <span>Datum</span>
+                  <input id="date" type="date" />
+                </label>
+
+                <div class="field">
+                  <span>Tider</span>
+                  <div class="slots" id="slots" aria-live="polite"></div>
+                </div>
+              </div>
+
+              <div class="booking-col booking-col--summary">
+                <div class="summary-card">
+                  <div class="summary-title">Sammanfattning</div>
+                  <div class="summary-row">
+                    <span>Tjänst</span>
+                    <strong id="summary-service">-</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Stylist</span>
+                    <strong id="summary-stylist">-</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Datum</span>
+                    <strong id="summary-date">-</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Tid</span>
+                    <strong id="summary-time">-</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Längd</span>
+                    <strong id="summary-duration">-</strong>
+                  </div>
+                  <div class="summary-row summary-row--price">
+                    <span>Pris</span>
+                    <strong id="summary-price">-</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Betalning</span>
+                    <strong id="summary-payment">-</strong>
+                  </div>
+                </div>
+
+                <form class="booking-form" id="booking-form">
+                  <label class="field">
+                    <span>Namn</span>
+                    <input id="name" type="text" placeholder="Ditt namn" autocomplete="name" required />
+                  </label>
+                  <label class="field">
+                    <span>E-post</span>
+                    <input
+                      id="email"
+                      type="email"
+                      placeholder="namn@example.com"
+                      autocomplete="email"
+                      required
+                    />
+                  </label>
+                  <label class="field">
+                    <span>Telefon</span>
+                    <input
+                      id="phone"
+                      type="tel"
+                      placeholder="+46 70 123 45 67"
+                      autocomplete="tel"
+                      required
+                    />
+                  </label>
+                  <label class="field">
+                    <span>Betalningsalternativ</span>
+                    <select id="payment-method" required></select>
+                  </label>
+                  <label class="field">
+                    <span>Notering</span>
+                    <textarea id="notes" rows="4" placeholder="Skriv gärna önskemål eller referens."></textarea>
+                  </label>
+                  <button class="button button--primary button--full" type="submit">
+                    Bekräfta bokning
+                  </button>
+                  <p class="fine-print">
+                    Genom att boka godkänner du att salongen kontaktar dig vid behov för att bekräfta
+                    eller flytta tiden.
+                  </p>
+                </form>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <aside class="sidebar">
+          <section class="side-card">
+            <div class="section-heading section-heading--tight">
+              <span class="eyebrow">Kommande bokningar</span>
+              <h2>Live-översikt</h2>
+            </div>
+            <div class="booking-list" id="booking-list"></div>
+          </section>
+
+          <section class="side-card side-card--accent">
+            <span class="eyebrow">Salongsdata</span>
+            <ul class="meta-list">
+              <li><strong>Adress:</strong> Tullgarns Annex, Trosa</li>
+              <li><strong>Öppettider:</strong> Dygnet runt</li>
+              <li><strong>Kontakt:</strong> Kärran 0768665158</li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
