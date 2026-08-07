@@ -294,6 +294,29 @@ a {
   border: 1px solid var(--line);
 }
 
+.treatments-card {
+  margin-bottom: 28px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(232, 164, 106, 0.18), transparent 28%),
+    var(--panel);
+}
+
+.treatments-card .section-heading > p {
+  max-width: 720px;
+  margin: 12px 0 0;
+  color: var(--muted);
+}
+
+.treatment-meta {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .feature-grid h3 {
   margin: 0 0 8px;
   font-size: 1.02rem;

@@ -47,7 +47,6 @@ const dateInput = document.getElementById("date");
 const paymentSelect = document.getElementById("payment-method");
 const slotsEl = document.getElementById("slots");
 const stylistList = document.getElementById("stylist-list");
-const bookingList = document.getElementById("booking-list");
 const toast = document.getElementById("toast");
 const nextAvailableSlot = document.getElementById("next-available-slot");
 
@@ -488,7 +487,6 @@ async function handleBookingSubmit(event) {
 
   state.bookings.unshift(booking);
   saveBookings();
-  renderBookings();
   renderSlots();
   form.reset();
   state.paymentMethod = paymentMethods[0].id;
@@ -546,7 +544,6 @@ function init() {
   renderPaymentMethods();
   initDateInput();
   attachEvents();
-  renderBookings();
   state.time = "";
   renderSlots();
   syncSummary();
