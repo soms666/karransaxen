@@ -1,0 +1,14 @@
+[
+  {
+    "id": "demo-1",
+    "name": "Alex",
+    "rating": 5,
+    "comment": "Superfin klippning och väldigt skön stämning. Jag gick därifrån med både ny frisyr och bättre humör."
+  },
+  {
+    "id": "demo-2",
+    "name": "Sofia",
+    "rating": 5,
+    "comment": "Kärran är noggrann, varm och proffsig. Skägget fick äntligen den form det försökt hitta själv."
+  }
+]

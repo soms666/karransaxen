@@ -32,14 +32,6 @@
           </div>
           <dl class="hero__stats">
             <div>
-              <dt>Snabb bokning</dt>
-              <dd>Under 1 minut</dd>
-            </div>
-            <div>
-              <dt>Mobil först</dt>
-              <dd>Fullt responsiv</dd>
-            </div>
-            <div>
               <dt>Öppet dygnet runt</dt>
               <dd>Boka när det passar</dd>
             </div>
@@ -99,6 +91,47 @@
             <p>En lugn och diskret behandling med fokus på komfort, omtanke och ett resultat du känner dig nöjd med.</p>
             <span class="treatment-meta">30 minuter · 450 kr</span>
           </article>
+        </div>
+      </section>
+
+      <section class="reviews-card" id="reviews">
+        <div class="section-heading">
+          <span class="eyebrow">Ord från kunder</span>
+          <div class="reviews-heading-row">
+            <div>
+              <h2>Hur var din stund hos Kärran?</h2>
+              <p>Lämna gärna ett betyg och några ord. Bra hår ska få bra recensioner.</p>
+            </div>
+            <div class="review-score" aria-live="polite">
+              <strong id="review-average">-</strong>
+              <span id="review-stars">Inga betyg ännu</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-layout">
+          <form class="review-form" id="review-form">
+            <label class="field">
+              <span>Namn</span>
+              <input id="review-name" type="text" placeholder="Ditt namn" required />
+            </label>
+            <label class="field">
+              <span>Betyg</span>
+              <select id="review-rating" required>
+                <option value="5">5 stjärnor - strålande</option>
+                <option value="4">4 stjärnor - jättebra</option>
+                <option value="3">3 stjärnor - bra</option>
+                <option value="2">2 stjärnor - sådär</option>
+                <option value="1">1 stjärna - behöver putsas</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Kommentar</span>
+              <textarea id="review-comment" rows="4" placeholder="Vad tyckte du?" required></textarea>
+            </label>
+            <button class="button button--primary" type="submit">Lämna recension</button>
+          </form>
+          <div class="reviews-list" id="reviews-list" aria-live="polite"></div>
         </div>
       </section>
 

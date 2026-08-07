@@ -39,6 +39,8 @@ const openingHours = {
 };
 
 const storageKey = "karran-saxen-bookings-v1";
+const reviewStorageKey = "karran-saxen-reviews-v1";
+const reviewRecipient = "cheriepallin@gmail.com";
 const bookingRecipient = "cheriepallin@gmail.com";
 const bookingEndpoint = "";
 const form = document.getElementById("booking-form");
@@ -49,6 +51,10 @@ const slotsEl = document.getElementById("slots");
 const stylistList = document.getElementById("stylist-list");
 const toast = document.getElementById("toast");
 const nextAvailableSlot = document.getElementById("next-available-slot");
+const reviewForm = document.getElementById("review-form");
+const reviewsList = document.getElementById("reviews-list");
+const reviewAverage = document.getElementById("review-average");
+const reviewStars = document.getElementById("review-stars");
 
 const summaryEls = {
   service: document.getElementById("summary-service"),
@@ -68,6 +74,8 @@ const state = {
   time: "",
   bookings: readBookings(),
 };
+
+let reviews = [];
 
 function todayIso() {
   const date = new Date();
@@ -91,6 +99,92 @@ function readBookings() {
 
 function saveBookings() {
   localStorage.setItem(storageKey, JSON.stringify(state.bookings));
+}
+
+function readStoredReviews() {
+  try {
+    const raw = localStorage.getItem(reviewStorageKey);
+    const stored = raw ? JSON.parse(raw) : [];
+    return Array.isArray(stored) ? stored : [];
+  } catch {
+    return [];
+  }
+}
+
+async function loadReviews() {
+  let fileReviews = [];
+
+  try {
+    const response = await fetch("reviews.json", { cache: "no-store" });
+    if (response.ok) fileReviews = await response.json();
+  } catch {
+    fileReviews = [];
+  }
+
+  const storedReviews = readStoredReviews();
+  const storedIds = new Set(storedReviews.map((review) => review.id));
+  reviews = [...storedReviews, ...fileReviews.filter((review) => !storedIds.has(review.id))];
+  renderReviews();
+}
+
+function saveReviews() {
+  localStorage.setItem(reviewStorageKey, JSON.stringify(reviews));
+}
+
+function sendReviewEmail(review) {
+  const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+  const subject = `Ny recension från ${review.name} · ${review.rating}/5`;
+  const body = [
+    "NY RECENSION",
+    "Kärran & Saxen",
+    "────────────────────",
+    "",
+    `Betyg: ${stars} (${review.rating}/5)`,
+    `Namn: ${review.name}`,
+    "",
+    "Kommentar:",
+    review.comment,
+    "",
+    "Tack för att du delar med dig!",
+  ].join("\n");
+
+  const mailto = `mailto:${reviewRecipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderReviews() {
+  if (reviews.length === 0) {
+    reviewAverage.textContent = "-";
+    reviewStars.textContent = "Inga betyg ännu";
+    reviewsList.innerHTML = "<p class=\"empty-state\">Bli den första som lämnar ett betyg.</p>";
+    return;
+  }
+
+  const average = reviews.reduce((sum, review) => sum + Number(review.rating), 0) / reviews.length;
+  reviewAverage.textContent = average.toFixed(1);
+  reviewStars.textContent = `${"★".repeat(Math.round(average))} · ${reviews.length} betyg`;
+  reviewsList.innerHTML = reviews
+    .map(
+      (review) => `
+        <article class="review-item">
+          <header>
+            <strong>${escapeHtml(review.name)}</strong>
+            <span aria-label="${review.rating} av 5 stjärnor">${"★".repeat(Number(review.rating))}</span>
+          </header>
+          <p>${escapeHtml(review.comment)}</p>
+        </article>
+      `,
+    )
+    .join("");
 }
 
 function formatDate(isoDate) {
@@ -523,6 +617,28 @@ function attachEvents() {
 
   slotsEl.addEventListener("click", handleSlotClick);
   form.addEventListener("submit", handleBookingSubmit);
+  reviewForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById("review-name").value.trim();
+    const rating = Number(document.getElementById("review-rating").value);
+    const comment = document.getElementById("review-comment").value.trim();
+
+    if (!name || !comment || rating < 1 || rating > 5) return;
+
+    reviews.unshift({
+      id: crypto.randomUUID(),
+      name,
+      rating,
+      comment,
+      createdAt: new Date().toISOString(),
+    });
+    saveReviews();
+    renderReviews();
+    reviewForm.reset();
+    showToast("Tack för din recension!");
+    sendReviewEmail({ name, rating, comment });
+  });
 }
 
 function init() {
@@ -536,6 +652,7 @@ function init() {
   state.time = "";
   renderSlots();
   syncSummary();
+  loadReviews();
 }
 
 init();
