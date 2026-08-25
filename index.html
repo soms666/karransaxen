@@ -162,7 +162,19 @@
 
                 <div class="field">
                   <span>Tider</span>
-                  <div class="slots" id="slots" aria-live="polite"></div>
+                  <div class="time-picker" id="slots" aria-live="polite">
+                    <div class="time-periods" role="tablist" aria-label="Välj tidsperiod">
+                      <button class="time-period" type="button" data-period="morning" role="tab">Förmiddag</button>
+                      <button class="time-period" type="button" data-period="afternoon" role="tab">Eftermiddag</button>
+                      <button class="time-period" type="button" data-period="evening" role="tab">Kväll</button>
+                      <button class="time-period" type="button" data-period="night" role="tab">Natt</button>
+                    </div>
+                    <label class="time-select-label">
+                      <span>Lediga halvtimmar</span>
+                      <select id="time-select" aria-label="Välj ledig tid"></select>
+                    </label>
+                    <small class="time-help" id="time-help">Välj en period för att se tiderna.</small>
+                  </div>
                 </div>
               </div>
 

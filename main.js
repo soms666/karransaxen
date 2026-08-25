@@ -46,6 +46,9 @@ const bookingEndpoint = "";
 const form = document.getElementById("booking-form");
 const serviceSelect = document.getElementById("service");
 const dateInput = document.getElementById("date");
+const timeSelect = document.getElementById("time-select");
+const timePeriods = document.querySelectorAll(".time-period");
+const timeHelp = document.getElementById("time-help");
 const paymentSelect = document.getElementById("payment-method");
 const slotsEl = document.getElementById("slots");
 const stylistList = document.getElementById("stylist-list");
@@ -72,6 +75,7 @@ const state = {
   paymentMethod: paymentMethods[0].id,
   date: todayIso(),
   time: "",
+  timePeriod: "morning",
   bookings: readBookings(),
 };
 
@@ -314,22 +318,39 @@ function renderSlots() {
     state.time = firstAvailable ? firstAvailable.label : "";
   }
 
-  slotsEl.innerHTML = slots
-    .map((slot) => {
-      const selected = slot.label === state.time;
-      return `
-        <button
-          class="slot"
-          type="button"
-          data-time="${slot.label}"
-          aria-pressed="${selected}"
-          ${slot.available ? "" : "disabled"}
-        >
-          ${slot.label}
-        </button>
-      `;
-    })
+  const periods = {
+    morning: { start: 6 * 60, end: 12 * 60, label: "Förmiddag" },
+    afternoon: { start: 12 * 60, end: 18 * 60, label: "Eftermiddag" },
+    evening: { start: 18 * 60, end: 24 * 60, label: "Kväll" },
+    night: { start: 0, end: 6 * 60, label: "Natt" },
+  };
+
+  const currentPeriod = periods[state.timePeriod] ?? periods.morning;
+  const periodSlots = slots.filter((slot) => {
+    const minutes = parseTime(slot.label);
+    return minutes >= currentPeriod.start && minutes < currentPeriod.end;
+  });
+
+  const firstAvailable = periodSlots.find((slot) => slot.available);
+  if (!periodSlots.some((slot) => slot.label === state.time && slot.available)) {
+    state.time = firstAvailable ? firstAvailable.label : "";
+  }
+
+  timeSelect.innerHTML = periodSlots
+    .map(
+      (slot) => `<option value="${slot.label}" ${slot.available ? "" : "disabled"}>${slot.label}${slot.available ? "" : " · upptagen"}</option>`,
+    )
     .join("");
+  timeSelect.value = state.time;
+  timeSelect.disabled = !firstAvailable;
+  timeHelp.textContent = firstAvailable
+    ? `${periodSlots.filter((slot) => slot.available).length} lediga tider på ${currentPeriod.label.toLowerCase()}.`
+    : `Inga lediga tider på ${currentPeriod.label.toLowerCase()}. Välj en annan period.`;
+  timePeriods.forEach((button) => {
+    const selected = button.dataset.period === state.timePeriod;
+    button.dataset.selected = String(selected);
+    button.setAttribute("aria-selected", String(selected));
+  });
 
   syncSummary();
 }
@@ -508,14 +529,6 @@ function ensureAvailableDate() {
   }
 }
 
-function handleSlotClick(event) {
-  const button = event.target.closest(".slot");
-  if (!button || button.disabled) return;
-
-  state.time = button.dataset.time;
-  renderSlots();
-}
-
 async function handleBookingSubmit(event) {
   event.preventDefault();
 
@@ -595,6 +608,18 @@ function attachEvents() {
     renderSlots();
   });
 
+  timeSelect.addEventListener("change", () => {
+    state.time = timeSelect.value;
+    syncSummary();
+  });
+
+  timePeriods.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.timePeriod = button.dataset.period;
+      renderSlots();
+    });
+  });
+
   paymentSelect.addEventListener("change", () => {
     state.paymentMethod = paymentSelect.value;
     syncSummary();
@@ -603,6 +628,7 @@ function attachEvents() {
   dateInput.addEventListener("change", () => {
     state.date = dateInput.value || todayIso();
     state.time = "";
+    state.timePeriod = "morning";
     renderSlots();
   });
 
@@ -615,7 +641,6 @@ function attachEvents() {
     renderSlots();
   });
 
-  slotsEl.addEventListener("click", handleSlotClick);
   form.addEventListener("submit", handleBookingSubmit);
   reviewForm.addEventListener("submit", (event) => {
     event.preventDefault();

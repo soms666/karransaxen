@@ -531,36 +531,68 @@ select {
   background: linear-gradient(160deg, rgba(216, 177, 107, 0.16), rgba(255, 255, 255, 0.05));
 }
 
-.slots {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+.time-picker {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.slot {
+.time-periods {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.time-period {
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.04);
   color: var(--text);
-  border-radius: 14px;
-  min-height: 46px;
+  border-radius: 10px;
+  min-height: 38px;
   font: inherit;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  transition: border-color 160ms ease, background 160ms ease;
 }
 
-.slot:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.slot[aria-pressed="true"] {
+.time-period[data-selected="true"] {
   border-color: rgba(216, 177, 107, 0.8);
   background: rgba(216, 177, 107, 0.18);
 }
 
-.slot:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
+.time-select-label {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.time-select-label > span,
+.time-help {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.time-select-label select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(216, 177, 107, 0.45);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  padding: 0 12px;
+}
+
+.time-select-label select:disabled {
+  opacity: 0.55;
+}
+
+.time-help {
+  display: block;
+  margin: 10px 2px 0;
 }
 
 .summary-card {
@@ -689,7 +721,6 @@ select {
   .hero__stats,
   .feature-grid,
   .choice-row,
-  .slots,
   .mini-grid {
     grid-template-columns: 1fr;
   }
